@@ -14,6 +14,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        // set up the window size
+        
+        // set up the window size
+        let window = UIWindow(frame: UIScreen.main.bounds)
+//        guard let window = self.window else { fatalError("no window") }
+
+        // set the view controller
+        window.rootViewController = LoginViewController()
+        window.makeKeyAndVisible()
+        
         return true
     }
 
