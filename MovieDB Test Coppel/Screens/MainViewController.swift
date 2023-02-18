@@ -37,7 +37,6 @@ public enum MovieListType: Int, CaseIterable {
 
 class MainViewController: UIViewController {
     //MARK: - UI
-    
     var segmentedControl: UISegmentedControl!
     
     let collectionView: UICollectionView! = {
@@ -56,8 +55,10 @@ class MainViewController: UIViewController {
     
     
     //MARK: - Variables
-    var movies: [Movie] = []
-    var apiService = APIService()
+    var movieResultsViewModel = MovieResultsViewModel()
+    var movies: [Movie] {
+        return self.movieResultsViewModel.movies
+    }
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
@@ -68,6 +69,21 @@ class MainViewController: UIViewController {
     }
     
     //MARK: - Helper methods
+    private func loadMovies() {
+        let loader = self.loader()
+        self.movieResultsViewModel.fetchMovies(by: .popular) { [weak self] results, errorMessage in
+            guard let self = self else { return }
+            loader.stopLoader(loader: loader)
+            if let errorMessage = errorMessage {
+                let okAction = UIAlertAction(title: "Ok", style: .default)
+                self.showAlert(title: "Error fetching movies", message: errorMessage, style: .alert, actions: [okAction])
+            }
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
+    }
+    
     private func setupNavBarButtons() {
         settingsBarButton = UIBarButtonItem(image: UIImage(systemName: "list.bullet"), style: .plain, target: self, action: #selector(settingsBarButtonAction))
         settingsBarButton.tintColor = .white
@@ -110,44 +126,37 @@ class MainViewController: UIViewController {
         self.setupNavBarButtons()
     }
     
-    private func loadMovies() {
-        let loader = self.loader()
-        apiService.fetchMovies(by: MovieListType(rawValue: self.segmentedControl.selectedSegmentIndex)!) { [weak self] movies, error in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.stopLoader(loader: loader)
-            }
-            if let error = error {
-                print(error)
-            } else {
-                self.movies = movies
-                DispatchQueue.main.async {
-                    self.collectionView.reloadData()
-                }
-            }
-        }
-    }
-    
     //MARK: - Button Actions
     
     @IBAction private func settingsBarButtonAction() {
-        let profileVC = ProfileViewController()
+        let okAction = UIAlertAction(title: "View profile", style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            let profileVC = ProfileViewController()
+            self.navigationController?.present(profileVC, animated: true)
+        }
+        let logOutAction = UIAlertAction(title: "Log out", style: .destructive) { _ in
+            print("log out")
+        }
+        let cancelAction = UIAlertAction(title: "Cancel",style: .cancel)
         
-        self.navigationController?.present(profileVC, animated: true)
+        self.showAlert(title: "Options", message: "What do you want to do?", style: .actionSheet, actions: [okAction, logOutAction, cancelAction])
+        
     }
     
     @IBAction private func segmentedValueChanged(sender: UISegmentedControl) {
         let movieType = MovieListType(rawValue: sender.selectedSegmentIndex)!
         let loader = self.loader()
-        apiService.fetchMovies(by: movieType) { [weak self] movies, error in
+        self.collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
+        
+        self.movieResultsViewModel.fetchMovies(by: movieType) { [weak self] result, errorMessage  in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.stopLoader(loader: loader)
-            }
-            if let error = error {
-                print(error)
+            loader.stopLoader(loader: loader)
+            if let errorMessage = errorMessage {
+                //Show error message
+                let okAction = UIAlertAction(title: "Ok", style: .default)
+                self.showAlert(title: "Error fetching movies", message: errorMessage, style: .alert, actions: [okAction])
             } else {
-                self.movies = movies
+                //No error
                 DispatchQueue.main.async {
                     self.collectionView.reloadData()
                 }
@@ -181,6 +190,22 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
         movieDetailVC.movie = movie
         
         self.navigationController?.show(movieDetailVC, sender: self)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let lastItem = self.movies.count - 1
+        guard indexPath.item == lastItem, let movieType = MovieListType(rawValue: self.segmentedControl.selectedSegmentIndex) else { return }
+        
+        self.movieResultsViewModel.loadMoreMovies(by: movieType) { [weak self] _, errorMessage in
+            guard let self = self else { return }
+            if let errorMessage = errorMessage {
+                let okAction = UIAlertAction(title: "Ok", style: .default)
+                self.showAlert(title: "Error fetching movies", message: errorMessage, style: .alert, actions: [okAction])
+            }
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
     }
     
 }

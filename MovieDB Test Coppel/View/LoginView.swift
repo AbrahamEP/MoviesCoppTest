@@ -97,7 +97,6 @@ class LoginView: UIView {
         usernameTextField.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.8).isActive = true
         passwordTextField.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.8).isActive = true
         errorMessageLabel.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.8).isActive = true
-//        errorMessageLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
         loginButton.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.8).isActive = true
     }
     

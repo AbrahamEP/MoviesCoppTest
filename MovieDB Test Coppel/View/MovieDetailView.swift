@@ -79,6 +79,19 @@ class MovieDetailView: UIView {
         return button
     }()
     
+    let favoriteImageButton: UIImageView! = {
+        let imageView = UIImageView()
+        let heartImage = UIImage(named: "heart")
+        heartImage?.withRenderingMode(.alwaysOriginal)
+        imageView.image = heartImage
+        
+        let tapGesture = UIGestureRecognizer()
+        tapGesture.addTarget(MovieDetailView.self, action: #selector(favoriteButtonAction(sender:)))
+        imageView.addGestureRecognizer(tapGesture)
+        
+        return imageView
+    }()
+    
     //MARK: - Variables
     var isFav = false
     var delegate: MovieDetailViewDelegate?
@@ -103,7 +116,7 @@ class MovieDetailView: UIView {
         self.setupAverageLabel()
         self.setupReleaseDateLabel()
         self.setupVoteCountLabel()
-        self.setupFavoriteButton()
+//        self.setupFavoriteButton()
         self.setupOverviewLabel()
     }
     
@@ -141,12 +154,19 @@ class MovieDetailView: UIView {
         self.voteCountLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
     }
     
-    private func setupFavoriteButton() {
-        self.addSubview(self.favoriteButton)
-        self.favoriteButton.topAnchor.constraint(equalTo: self.voteCountLabel.bottomAnchor, constant: 8).isActive = true
-        self.favoriteButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
-        
+    private func setupFavoriteImageButton() {
+        self.addSubview(self.favoriteImageButton)
+        self.favoriteImageButton.topAnchor.constraint(equalTo: self.voteCountLabel.bottomAnchor, constant: 8).isActive = true
+        self.favoriteImageButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
+        self.favoriteImageButton.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        self.favoriteImageButton.heightAnchor.constraint(equalToConstant: 36).isActive = true
     }
+    
+//    private func setupFavoriteButton() {
+//        self.addSubview(self.favoriteButton)
+//        self.favoriteButton.topAnchor.constraint(equalTo: self.voteCountLabel.bottomAnchor, constant: 8).isActive = true
+//        self.favoriteButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
+//    }
     
     private func setupOverviewLabel() {
         self.addSubview(self.overviewLabel)
@@ -156,6 +176,11 @@ class MovieDetailView: UIView {
         self.overviewLabel.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor, constant: 8).isActive = true
     }
     
+    func setFavoriteStarButton(isFav: Bool) {
+        
+    }
+    
+    //MARK: - Actions
     @IBAction private func favoriteButtonAction(sender: UIButton) {
         isFav.toggle()
         if isFav {
