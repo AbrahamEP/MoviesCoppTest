@@ -32,14 +32,20 @@ class MovieDetailViewController: UIViewController {
         self.setupViews()
         self.movieDetailViewModel = MovieDetailViewModel(movie: self.movie)
         self.movieDetailViewModel.configure(self.movieDetailView)
+        self.movieDetailViewModel.checkIsFavMovie(movie) { [movieDetailView] isFavMovie, movieEntity in
+            guard let movieDetailView = movieDetailView else { return }
+            self.currentMovieEntity = movieEntity
+            self.movieDetailViewModel.setIsFavoriteMovie(movieDetailView, isFav: isFavMovie)
+        }
+        
         self.movieDetailView.delegate = self
-        self.checkIsFavMovie()
     }
     
     
     //MARK: - Helper methods
     private func setupViews() {
         self.view.backgroundColor = .black
+        self.navigationController?.navigationBar.prefersLargeTitles = false
         
         self.view.addSubview(self.movieDetailView)
         self.movieDetailView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
@@ -48,32 +54,34 @@ class MovieDetailViewController: UIViewController {
         self.movieDetailView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
     }
     
-    private func checkIsFavMovie() {
-        let movieId = "\(self.movie.id)"
-        let movieFetch: NSFetchRequest<MovieEntity> = MovieEntity.fetchRequest()
-        movieFetch.predicate = NSPredicate(format: "id = %@", movieId)
-        
-        do {
-          let results = try coreDataStack.managedContext.fetch(movieFetch)
-          if !results.isEmpty {
-              self.currentMovieEntity = results.first!
-              self.movieDetailView.favoriteButton.setTitle("Favorito", for: .normal)
-              self.movieDetailView.isFav = true
-          } else {
-              self.movieDetailView.isFav = false
-              self.movieDetailView.favoriteButton.setTitle("NO Favorito", for: .normal)
-          }
-          
-        } catch let error as NSError {
-          print("Fetch error: \(error) description: \(error.userInfo)")
-        }
-    }
+//    private func checkIsFavMovie() {
+//        let movieId = "\(self.movie.id)"
+//        let movieFetch: NSFetchRequest<MovieEntity> = MovieEntity.fetchRequest()
+//        movieFetch.predicate = NSPredicate(format: "id = %@", movieId)
+//
+//        do {
+//          let results = try coreDataStack.managedContext.fetch(movieFetch)
+//          if !results.isEmpty {
+//              self.currentMovieEntity = results.first!
+//              self.movieDetailView.favoriteButton.setTitle("Favorito", for: .normal)
+//              self.movieDetailView.isFav = true
+//          } else {
+//              self.movieDetailView.isFav = false
+//              self.movieDetailView.favoriteButton.setTitle("NO Favorito", for: .normal)
+//          }
+//
+//        } catch let error as NSError {
+//          print("Fetch error: \(error) description: \(error.userInfo)")
+//        }
+//    }
     
 }
 
 extension MovieDetailViewController: MovieDetailViewDelegate {
     
     func didPressedFavButton(_ view: MovieDetailView, isFav: Bool) {
+        print("Favorite button pressed in ViewController")
+        self.movieDetailViewModel.setIsFavoriteMovie(self.movieDetailView, isFav: isFav)
         if isFav {
             //Save movie
             let movieEntity = MovieEntity(context: self.coreDataStack.managedContext)
@@ -88,10 +96,13 @@ extension MovieDetailViewController: MovieDetailViewDelegate {
             movieEntity.title = self.movie.title
             
             self.coreDataStack.saveContext()
+            
+            
         } else {
             //delete movie
             guard let movieEntity = self.currentMovieEntity else { return }
-            self.coreDataStack.managedContext.delete(movieEntity)
+            let objectToDelete = self.coreDataStack.managedContext.object(with: movieEntity.objectID)
+            self.coreDataStack.managedContext.delete(objectToDelete)
             self.coreDataStack.saveContext()
         }
         

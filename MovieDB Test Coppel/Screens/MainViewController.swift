@@ -131,8 +131,10 @@ class MainViewController: UIViewController {
     @IBAction private func settingsBarButtonAction() {
         let okAction = UIAlertAction(title: "View profile", style: .default) { [weak self] _ in
             guard let self = self else { return }
+            
             let profileVC = ProfileViewController()
-            self.navigationController?.present(profileVC, animated: true)
+            let navVC = UINavigationController(rootViewController: profileVC)
+            self.navigationController?.present(navVC, animated: true)
         }
         let logOutAction = UIAlertAction(title: "Log out", style: .destructive) { _ in
             print("log out")

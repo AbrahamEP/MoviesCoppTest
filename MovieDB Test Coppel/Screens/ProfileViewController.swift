@@ -143,6 +143,16 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
         
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let movieEnt = self.movies[indexPath.item]
+        let movie = Movie(movieEnt: movieEnt)
+        
+        let movieDetailVC = MovieDetailViewController()
+        movieDetailVC.movie = movie
+        
+        self.navigationController?.show(movieDetailVC, sender: self)
+    }
 }
 
 extension ProfileViewController: UICollectionViewDelegateFlowLayout {

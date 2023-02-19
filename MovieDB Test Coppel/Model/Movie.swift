@@ -22,4 +22,21 @@ struct Movie: Codable {
     let video : Bool
     let voteAverage : Double
     let voteCount : Int
+    
+    init(movieEnt: MovieEntity) {
+        self.adult = false
+        self.backdropPath = movieEnt.backdropPath
+        self.id = Int(movieEnt.id ?? "") ?? 0
+        self.genreIds = []
+        self.originalTitle = ""
+        self.originalLanguage = ""
+        self.overview = movieEnt.overview ?? ""
+        self.popularity = 0.0
+        self.posterPath = movieEnt.posterPath
+        self.releaseDate = movieEnt.releaseDate ?? ""
+        self.title = movieEnt.title ?? ""
+        self.video = false
+        self.voteCount = Int(movieEnt.voteCount)
+        self.voteAverage = movieEnt.averageVote
+    }
 }

@@ -70,24 +70,25 @@ class MovieDetailView: UIView {
         return label
     }()
     
-    let favoriteButton: UIButton! = {
-        let button = UIButton(frame: .zero)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("NO Favorito", for: .normal)
-        button.addTarget(nil, action: #selector(favoriteButtonAction(sender:)), for: .touchUpInside)
+    private let emptyHeartImage: UIImage! = {
+        let image = UIImage(named: "heart")?.withRenderingMode(.alwaysTemplate)
         
-        return button
+        return image
+    }()
+    
+    private let fullHeartImage: UIImage! = {
+        let image = UIImage(named: "favorite-heart")?.withRenderingMode(.alwaysTemplate)
+        
+        return image
     }()
     
     let favoriteImageButton: UIImageView! = {
-        let imageView = UIImageView()
-        let heartImage = UIImage(named: "heart")
-        heartImage?.withRenderingMode(.alwaysOriginal)
-        imageView.image = heartImage
-        
-        let tapGesture = UIGestureRecognizer()
-        tapGesture.addTarget(MovieDetailView.self, action: #selector(favoriteButtonAction(sender:)))
-        imageView.addGestureRecognizer(tapGesture)
+        let heartImage = UIImage(named: "heart")?.withRenderingMode(.alwaysTemplate)
+        let imageView = UIImageView(image: heartImage)
+        imageView.isUserInteractionEnabled = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.backgroundColor = .clear
+        imageView.tintColor = .red
         
         return imageView
     }()
@@ -111,18 +112,19 @@ class MovieDetailView: UIView {
     private func setupViews() {
         self.backgroundColor = .black
         
+        self.setupFavoriteImageButton()
         self.setupImageSlide()
         self.setupTitleLabel()
         self.setupAverageLabel()
         self.setupReleaseDateLabel()
         self.setupVoteCountLabel()
-//        self.setupFavoriteButton()
+        
         self.setupOverviewLabel()
     }
     
     private func setupImageSlide() {
         self.addSubview(self.imageSlideShow)
-        self.imageSlideShow.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        self.imageSlideShow.topAnchor.constraint(equalTo: self.favoriteImageButton.bottomAnchor, constant: 16).isActive = true
         self.imageSlideShow.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         self.imageSlideShow.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         self.imageSlideShow.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.35).isActive = true
@@ -155,22 +157,22 @@ class MovieDetailView: UIView {
     }
     
     private func setupFavoriteImageButton() {
+        
+        let tapGesture = UITapGestureRecognizer()
+        tapGesture.numberOfTouchesRequired = 1
+        tapGesture.addTarget(self, action: #selector(favoriteButtonAction))
+        self.favoriteImageButton.addGestureRecognizer(tapGesture)
+        
         self.addSubview(self.favoriteImageButton)
-        self.favoriteImageButton.topAnchor.constraint(equalTo: self.voteCountLabel.bottomAnchor, constant: 8).isActive = true
+        self.favoriteImageButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 8).isActive = true
         self.favoriteImageButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
-        self.favoriteImageButton.widthAnchor.constraint(equalToConstant: 36).isActive = true
-        self.favoriteImageButton.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        self.favoriteImageButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        self.favoriteImageButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
-    
-//    private func setupFavoriteButton() {
-//        self.addSubview(self.favoriteButton)
-//        self.favoriteButton.topAnchor.constraint(equalTo: self.voteCountLabel.bottomAnchor, constant: 8).isActive = true
-//        self.favoriteButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
-//    }
     
     private func setupOverviewLabel() {
         self.addSubview(self.overviewLabel)
-        self.overviewLabel.topAnchor.constraint(equalTo: self.favoriteButton.bottomAnchor, constant: 16).isActive = true
+        self.overviewLabel.topAnchor.constraint(equalTo: self.releaseDateLabel.bottomAnchor, constant: 80).isActive = true
         self.overviewLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
         self.overviewLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
         self.overviewLabel.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor, constant: 8).isActive = true
@@ -178,16 +180,14 @@ class MovieDetailView: UIView {
     
     func setFavoriteStarButton(isFav: Bool) {
         
+        self.favoriteImageButton.image = isFav ? self.fullHeartImage : self.emptyHeartImage
     }
     
     //MARK: - Actions
-    @IBAction private func favoriteButtonAction(sender: UIButton) {
+    @objc private func favoriteButtonAction() {
+        print("Favorite button pressed")
         isFav.toggle()
-        if isFav {
-            self.favoriteButton.setTitle("Favorito", for: .normal)
-        } else {
-            self.favoriteButton.setTitle("NO Favorito", for: .normal)
-        }
+        self.setFavoriteStarButton(isFav: isFav)
         delegate?.didPressedFavButton(self, isFav: isFav)
     }
     

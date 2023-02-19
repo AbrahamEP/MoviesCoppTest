@@ -44,25 +44,33 @@ class LoginViewController: UIViewController {
 
 extension LoginViewController: LoginViewDelegate {
     func didPressedLogin(_ view: LoginView) {
-        self.apiService.login(with: self.loginView.usernameTextField.text ?? "", password: self.loginView.passwordTextField.text ?? "") { access in
-            switch access {
-            case .granted:
-                
-                let mainVC = MainViewController()
-                let navVC = UINavigationController(rootViewController: mainVC)
-                navVC.navigationBar.prefersLargeTitles = true
-
-                if let window = self.view.window {
-                    UIView.transition(with: window, duration: 0.3, options: .transitionFlipFromLeft, animations: {
-
-
-                        window.rootViewController = navVC
-                    }, completion: nil)
-                }
-            case .rejected:
-                self.loginView.errorMessageLabel.text = "Acceso negado"
+        let mainVC = MainViewController()
+        let navVC = UINavigationController(rootViewController: mainVC)
+        navVC.navigationBar.prefersLargeTitles = true
+        if let window = self.view.window {
+            UIView.transition(with: window, duration: 0.3) {
+                window.rootViewController = navVC
             }
         }
+//        self.apiService.login(with: self.loginView.usernameTextField.text ?? "", password: self.loginView.passwordTextField.text ?? "") { access in
+//            switch access {
+//            case .granted:
+//
+//                let mainVC = MainViewController()
+//                let navVC = UINavigationController(rootViewController: mainVC)
+//                navVC.navigationBar.prefersLargeTitles = true
+//
+//                if let window = self.view.window {
+//                    UIView.transition(with: window, duration: 0.3, options: .transitionFlipFromLeft, animations: {
+//
+//
+//                        window.rootViewController = navVC
+//                    }, completion: nil)
+//                }
+//            case .rejected:
+//                self.loginView.errorMessageLabel.text = "Acceso negado"
+//            }
+//        }
         
         
     }
