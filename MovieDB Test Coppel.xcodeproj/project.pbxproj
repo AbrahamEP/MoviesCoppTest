@@ -34,6 +34,7 @@
 		A33D9707299B29A700588EEF /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33D9706299B29A700588EEF /* UserData.swift */; };
 		A3D69A7729A04BDC002FFB6C /* MovieResultsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D69A7629A04BDC002FFB6C /* MovieResultsViewModel.swift */; };
 		A3D69A7929A0715B002FFB6C /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D69A7829A0715B002FFB6C /* UIViewController+Alert.swift */; };
+		A3D69A7B29A1AC5E002FFB6C /* UserDefaults+SaveLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D69A7A29A1AC5E002FFB6C /* UserDefaults+SaveLogin.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +68,7 @@
 		A33D9706299B29A700588EEF /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		A3D69A7629A04BDC002FFB6C /* MovieResultsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieResultsViewModel.swift; sourceTree = "<group>"; };
 		A3D69A7829A0715B002FFB6C /* UIViewController+Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
+		A3D69A7A29A1AC5E002FFB6C /* UserDefaults+SaveLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+SaveLogin.swift"; sourceTree = "<group>"; };
 		BE4EEBCB0F55734DEBDFD93A /* Pods_MovieDB_Test_Coppel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MovieDB_Test_Coppel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -185,6 +187,7 @@
 			children = (
 				A33D96FC299B144D00588EEF /* UIViewController+Loader.swift */,
 				A3D69A7829A0715B002FFB6C /* UIViewController+Alert.swift */,
+				A3D69A7A29A1AC5E002FFB6C /* UserDefaults+SaveLogin.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -347,6 +350,7 @@
 				A33D96E629988BD600588EEF /* MovieCollectionViewCell.swift in Sources */,
 				A33D96E229985EAD00588EEF /* LoginView.swift in Sources */,
 				A33D9702299B17C200588EEF /* MovieEntity+CoreDataProperties.swift in Sources */,
+				A3D69A7B29A1AC5E002FFB6C /* UserDefaults+SaveLogin.swift in Sources */,
 				A33D96EC2999C5B800588EEF /* MovieResults.swift in Sources */,
 				A33D9704299B1FBA00588EEF /* CoreDataStack.swift in Sources */,
 				A33D96E82999891100588EEF /* ProfileViewController.swift in Sources */,

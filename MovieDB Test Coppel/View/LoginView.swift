@@ -58,6 +58,7 @@ class LoginView: UIView {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "password"
+        textField.isSecureTextEntry = true
         
         return textField
     }()
@@ -94,7 +95,11 @@ class LoginView: UIView {
     private func setupViews() {
         self.setupStackView()
         
+        
+        usernameTextField.delegate = self
         usernameTextField.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.8).isActive = true
+        
+        passwordTextField.delegate = self
         passwordTextField.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.8).isActive = true
         errorMessageLabel.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.8).isActive = true
         loginButton.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.8).isActive = true
@@ -120,5 +125,12 @@ class LoginView: UIView {
         }
         
     }
+}
 
+extension LoginView: UITextFieldDelegate {
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return false
+    }
 }

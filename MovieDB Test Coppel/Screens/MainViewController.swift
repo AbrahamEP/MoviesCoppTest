@@ -137,7 +137,16 @@ class MainViewController: UIViewController {
             self.navigationController?.present(navVC, animated: true)
         }
         let logOutAction = UIAlertAction(title: "Log out", style: .destructive) { _ in
-            print("log out")
+            UserDefaults.setLoginStatus(false)
+            let loginVC = LoginViewController()
+//            let navVC = UINavigationController(rootViewController: mainVC)
+//            navVC.navigationBar.prefersLargeTitles = true
+            
+            guard let window = self.view.window else { return }
+            UIView.transition(with: window, duration: 0.3, options: .transitionFlipFromLeft) {
+                window.rootViewController = loginVC
+                window.makeKeyAndVisible()
+            }
         }
         let cancelAction = UIAlertAction(title: "Cancel",style: .cancel)
         

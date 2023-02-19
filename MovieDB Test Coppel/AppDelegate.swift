@@ -10,20 +10,30 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+//        let window = UIWindow(frame: UIScreen.main.bounds)
+//        let loginStatus = UserDefaults.getLoginStatus()
+//        
+//        if loginStatus {
+//            //If the user is login send to Main
+//            let mainVC = MainViewController()
+//            let navVC = UINavigationController(rootViewController: mainVC)
+//            navVC.navigationBar.prefersLargeTitles = true
+//            
+//            UIView.transition(with: window, duration: 0.3, options: .transitionFlipFromLeft) {
+//                window.rootViewController = navVC
+//                window.makeKeyAndVisible()
+//            }
+//            
+//        } else {
+//            //User not login. Send to Login
+//            window.rootViewController = LoginViewController()
+//            window.makeKeyAndVisible()
+//        }
         
-        // set up the window size
-        
-        // set up the window size
-        let window = UIWindow(frame: UIScreen.main.bounds)
-//        guard let window = self.window else { fatalError("no window") }
 
-        // set the view controller
-        window.rootViewController = LoginViewController()
-        window.makeKeyAndVisible()
+        
         
         return true
     }

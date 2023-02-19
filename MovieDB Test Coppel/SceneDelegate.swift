@@ -21,15 +21,39 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
             window = UIWindow(frame: windowScene.coordinateSpace.bounds)
             window?.windowScene = windowScene
-                
-            self.window = UIWindow(windowScene: windowScene)
-
-            let vc = LoginViewController()
-
-            let rootNC = UINavigationController(rootViewController: vc)
-
-            self.window?.rootViewController = rootNC
-            self.window?.makeKeyAndVisible()
+        
+        self.window = UIWindow(windowScene: windowScene)
+        guard let window = self.window else {
+            return
+        }
+        
+        let loginStatus = UserDefaults.getLoginStatus()
+        
+        if loginStatus {
+            //If the user is login send to Main
+            let mainVC = MainViewController()
+            let navVC = UINavigationController(rootViewController: mainVC)
+            navVC.navigationBar.prefersLargeTitles = true
+            
+            UIView.transition(with: window, duration: 0.3, options: .transitionFlipFromLeft) {
+                window.rootViewController = navVC
+                window.makeKeyAndVisible()
+            }
+            
+        } else {
+            //User not login. Send to Login
+            window.rootViewController = LoginViewController()
+            window.makeKeyAndVisible()
+        }
+        
+        
+        
+//        let vc = LoginViewController()
+//        
+//        let rootNC = UINavigationController(rootViewController: vc)
+//        
+//        self.window?.rootViewController = rootNC
+//        self.window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
